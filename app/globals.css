@@ -26,24 +26,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100vh;
+  width: 100vw;
+  height: 100dvh; /* Better for mobile Safari (handles address bar) */
   position: relative;
   z-index: 10;
-}
-
-.orb-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  z-index: 20; /* Ensure it is clickable above everything */
-  transition: transform 0.1s ease-out; /* Smooth transition for the voice scaling */
 }
 
 .orb {
@@ -54,16 +40,22 @@ body {
   border-radius: 50%;
   background: linear-gradient(135deg, #c084fc, #3b82f6);
   box-shadow: 0 0 80px rgba(59, 130, 246, 0.5), inset 0 0 40px rgba(255,255,255,0.5);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: filter 0.8s, box-shadow 0.8s, background 0.8s, transform 0.1s ease-out;
   position: relative;
-  z-index: 5;
+  z-index: 50; /* Ensure extremely high z-index to avoid touch blocking */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* Remove gray tap box on iOS Safari */
 }
 
 /* idle state */
 .orb.idle {
   filter: grayscale(0.7) opacity(0.8);
   box-shadow: 0 0 40px rgba(255,255,255,0.05);
-  transform: scale(0.9);
+}
+
+.orb.idle:hover {
+  filter: grayscale(0.4) opacity(1);
+  box-shadow: 0 0 60px rgba(192, 132, 252, 0.3);
 }
 
 .orb-container:hover .orb.idle {

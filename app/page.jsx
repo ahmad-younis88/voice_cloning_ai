@@ -115,12 +115,10 @@ export default function Home() {
       <div className="blob blob-2"></div>
       <div className="container">
         <div 
-          className="orb-container" 
+          className={`orb ${status}`} 
           onClick={toggleConnection}
           style={{ transform: `scale(${dynamicScale})` }}
-        >
-          <div className={`orb ${status}`} />
-        </div>
+        />
       </div>
     </>
   );
