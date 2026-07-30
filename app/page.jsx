@@ -58,7 +58,7 @@ export default function Home() {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
-      const baseUrl = "https://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview";
+      const baseUrl = "https://api.openai.com/v1/realtime";
       const sdpResponse = await fetch(baseUrl, {
         method: "POST",
         body: offer.sdp,
