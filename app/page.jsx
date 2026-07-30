@@ -15,7 +15,8 @@ export default function Home() {
       
       const tokenResponse = await fetch("/api/session", { method: "POST" });
       if (!tokenResponse.ok) {
-        throw new Error("Failed to get session token");
+        const errorData = await tokenResponse.json().catch(() => ({}));
+        throw new Error((errorData.error || `HTTP error! status: ${tokenResponse.status}`) + (errorData.details ? "\nDetails: " + errorData.details : ""));
       }
       const tokenData = await tokenResponse.json();
       const ephemeralKey = tokenData.client_secret?.value || tokenData.value;

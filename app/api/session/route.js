@@ -28,7 +28,7 @@ export async function POST(request) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("OpenAI API Error:", errorText);
-      return new Response(JSON.stringify({ error: `OpenAI API Error: ${response.status}` }), {
+      return new Response(JSON.stringify({ error: `OpenAI API Error: ${response.status}`, details: errorText }), {
         status: response.status,
         headers: { 'Content-Type': 'application/json' }
       });
