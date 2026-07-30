@@ -60,6 +60,7 @@ export default function Home() {
 
     } catch (err) {
       console.error(err);
+      alert("Error: " + err.message);
       setStatus("idle");
     }
   };

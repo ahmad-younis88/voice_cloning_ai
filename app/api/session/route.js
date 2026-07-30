@@ -9,7 +9,7 @@ export async function POST(request) {
       });
     }
 
-    const response = await fetch("https://api.openai.com/v1/realtime/client_secrets", {
+    const response = await fetch("https://api.openai.com/v1/realtime/sessions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${apiKey}`,
