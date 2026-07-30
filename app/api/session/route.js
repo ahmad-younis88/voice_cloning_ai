@@ -19,7 +19,11 @@ export async function POST(request) {
         session: {
           model: "gpt-4o-realtime-preview",
           type: "realtime",
-          voice: "shimmer",
+          audio: {
+            output: {
+              voice: "shimmer"
+            }
+          },
           instructions: "You are a helpful and friendly AI assistant. You must always speak and understand Arabic natively. Do not use English unless explicitly asked. Respond concisely and conversationally.",
         }
       }),
