@@ -24,11 +24,10 @@ export default function Home() {
       const pc = new RTCPeerConnection();
       pcRef.current = pc;
 
-      // Play remote audio
-      audioElRef.current = document.createElement("audio");
-      audioElRef.current.autoplay = true;
       pc.ontrack = (e) => {
-        audioElRef.current.srcObject = e.streams[0];
+        if (audioElRef.current) {
+          audioElRef.current.srcObject = e.streams[0];
+        }
       };
 
       // Add local microphone track
@@ -111,6 +110,7 @@ export default function Home() {
 
   return (
     <>
+      <audio ref={audioElRef} autoPlay style={{ display: "none" }} />
       <div className="blob blob-1"></div>
       <div className="blob blob-2"></div>
       <div className="container">
