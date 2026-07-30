@@ -58,7 +58,7 @@ export default function Home() {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
-      const baseUrl = "https://api.openai.com/v1/realtime/calls";
+      const baseUrl = "https://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview";
       const sdpResponse = await fetch(baseUrl, {
         method: "POST",
         body: offer.sdp,
@@ -68,7 +68,10 @@ export default function Home() {
         }
       });
 
-      if (!sdpResponse.ok) throw new Error("Failed to exchange SDP");
+      if (!sdpResponse.ok) {
+        const sdpError = await sdpResponse.text();
+        throw new Error(`SDP Exchange Failed (${sdpResponse.status}): ${sdpError}`);
+      }
       
       const answer = {
         type: "answer",
