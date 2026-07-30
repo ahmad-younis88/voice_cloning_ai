@@ -9,16 +9,18 @@ export async function POST(request) {
       });
     }
 
-    const response = await fetch("https://api.openai.com/v1/realtime/sessions", {
+    const response = await fetch("https://api.openai.com/v1/realtime/client_secrets", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-realtime-preview",
-        voice: "shimmer",
-        instructions: "You are a helpful and friendly AI assistant. You must always speak and understand Arabic natively. Do not use English unless explicitly asked. Respond concisely and conversationally.",
+        session: {
+          model: "gpt-4o-realtime-preview",
+          voice: "shimmer",
+          instructions: "You are a helpful and friendly AI assistant. You must always speak and understand Arabic natively. Do not use English unless explicitly asked. Respond concisely and conversationally.",
+        }
       }),
     });
 

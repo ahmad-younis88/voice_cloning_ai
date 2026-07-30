@@ -18,7 +18,7 @@ export default function Home() {
         throw new Error("Failed to get session token");
       }
       const tokenData = await tokenResponse.json();
-      const ephemeralKey = tokenData.client_secret?.value;
+      const ephemeralKey = tokenData.client_secret?.value || tokenData.value;
       if (!ephemeralKey) throw new Error("No ephemeral key returned");
       
       const pc = new RTCPeerConnection();
@@ -58,7 +58,7 @@ export default function Home() {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
-      const baseUrl = "https://api.openai.com/v1/realtime";
+      const baseUrl = "https://api.openai.com/v1/realtime/calls";
       const sdpResponse = await fetch(baseUrl, {
         method: "POST",
         body: offer.sdp,
