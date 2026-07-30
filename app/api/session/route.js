@@ -18,6 +18,7 @@ export async function POST(request) {
       body: JSON.stringify({
         session: {
           model: "gpt-4o-realtime-preview",
+          type: "realtime",
           voice: "shimmer",
           instructions: "You are a helpful and friendly AI assistant. You must always speak and understand Arabic natively. Do not use English unless explicitly asked. Respond concisely and conversationally.",
         }
