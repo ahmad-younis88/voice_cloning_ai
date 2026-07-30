@@ -33,18 +33,24 @@ body {
 }
 
 .orb-container {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  z-index: 20; /* Ensure it is clickable above everything */
+  transition: transform 0.1s ease-out; /* Smooth transition for the voice scaling */
 }
 
 .orb {
   width: 300px;
   height: 300px;
+  max-width: 80vw;
+  max-height: 80vw;
   border-radius: 50%;
   background: linear-gradient(135deg, #c084fc, #3b82f6);
   box-shadow: 0 0 80px rgba(59, 130, 246, 0.5), inset 0 0 40px rgba(255,255,255,0.5);

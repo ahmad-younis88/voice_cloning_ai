@@ -3,8 +3,11 @@ import { useState, useRef, useEffect } from "react";
 
 export default function Home() {
   const [status, setStatus] = useState("idle"); // idle, connecting, active
+  const [volume, setVolume] = useState(0);
   const pcRef = useRef(null);
   const audioElRef = useRef(null);
+  const analyserRef = useRef(null);
+  const animationRef = useRef(null);
 
   const initWebRTC = async () => {
     try {
@@ -32,19 +35,36 @@ export default function Home() {
       const ms = await navigator.mediaDevices.getUserMedia({ audio: true });
       pc.addTrack(ms.getTracks()[0]);
 
+      // Setup audio analyzer for local microphone
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      const source = audioCtx.createMediaStreamSource(ms);
+      source.connect(analyser);
+      analyserRef.current = analyser;
+
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      const updateVolume = () => {
+        analyser.getByteFrequencyData(dataArray);
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+        const avg = sum / dataArray.length;
+        setVolume(avg); // 0 to 255
+        animationRef.current = requestAnimationFrame(updateVolume);
+      };
+      updateVolume();
+
       // Create Offer
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
       const baseUrl = "https://api.openai.com/v1/realtime";
-      const model = "gpt-4o-realtime-preview";
-      const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
+      const sdpResponse = await fetch(baseUrl, {
         method: "POST",
         body: offer.sdp,
         headers: {
           Authorization: `Bearer ${ephemeralKey}`,
           "Content-Type": "application/sdp",
-          "OpenAI-Beta": "realtime=v1"
         }
       });
 
@@ -70,6 +90,10 @@ export default function Home() {
       pcRef.current.close();
       pcRef.current = null;
     }
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+    setVolume(0);
     setStatus("idle");
   };
 
@@ -81,12 +105,20 @@ export default function Home() {
     }
   };
 
+  // Calculate dynamic scale based on volume (0 to 255)
+  // Scale between 1 and 1.3
+  const dynamicScale = status === "active" ? 1 + (volume / 255) * 0.4 : 1;
+
   return (
     <>
       <div className="blob blob-1"></div>
       <div className="blob blob-2"></div>
       <div className="container">
-        <div className="orb-container" onClick={toggleConnection}>
+        <div 
+          className="orb-container" 
+          onClick={toggleConnection}
+          style={{ transform: `scale(${dynamicScale})` }}
+        >
           <div className={`orb ${status}`} />
         </div>
       </div>
